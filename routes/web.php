@@ -9,4 +9,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('test');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::get('/category', [App\Http\Controllers\ProductController::class, 'index'])->name('category');
+Route::get('/product', [App\Http\Controllers\ProductController::class, 'show'])->name('product');
+
+
+Route::get('/customer', [App\Http\Controllers\PartnerController::class, 'index'])->name('customer');
+Route::get('/supplier', [App\Http\Controllers\PartnerController::class, 'show'])->name('supplier');
+
