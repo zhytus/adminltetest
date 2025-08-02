@@ -18,3 +18,4 @@ Route::get('/product', [App\Http\Controllers\ProductController::class, 'show'])-
 
 Route::get('/customer', [App\Http\Controllers\PartnerController::class, 'index'])->name('customer');
 Route::get('/supplier', [App\Http\Controllers\PartnerController::class, 'show'])->name('supplier');
+
