@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "content-hash": "59c0af3836bafa08a6234f19b45feabb",
+  
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2377,7 +2378,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-02T09:36:06+00:00"
+            "time": "2025-08-02T09:36:06+00:00
         },
         {
             "name": "nette/schema",

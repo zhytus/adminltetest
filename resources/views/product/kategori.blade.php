@@ -9,6 +9,7 @@
 @section('content')
     <x-adminlte-card title="Product Categories" icon="fas fa-lg fa-boxes">
         <p>Manage All Product Categories Here!</p>
+        
         <a href="javascript:window.history.back()" class="btn btn-secondary mb-3">
             <i class="fas fa-arrow-left"></i> Back
         </a>
