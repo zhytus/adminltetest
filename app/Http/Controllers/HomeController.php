@@ -23,6 +23,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('test');
+        return view('dashboard');
+    }
+
+    public function show()
+    {
+        return view('welcome');
     }
 }
