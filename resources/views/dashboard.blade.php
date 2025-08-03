@@ -10,8 +10,12 @@
     <p>Welcome, to this beautiful admin panel.</p>
     <x-adminlte-card title="Product Management" icon="fas fa-lg fa-boxes" collapsible>
         <p>Manage All Product Here !</p>
-        <x-adminlte-button theme="primary" label="Manage Product" icon="fas fa-box-open"/>
-        <x-adminlte-button theme="success" label="Manage Category " icon="fas fa-boxes"/>
+        <button class="btn btn-primary" onclick="window.location.href='{{ route('product') }}'">
+            <i class="fas fa-box-open"></i> Manage Product
+        </button>
+        <button class="btn btn-success" onclick="window.location.href='{{ route('category') }}'">
+            <i class="fas fa-boxes"></i> Manage Product Category
+        </button>
     </x-adminlte-card>
 
     <x-adminlte-card title="Partner Management" icon="fas fa-lg fa-users" collapsible>
