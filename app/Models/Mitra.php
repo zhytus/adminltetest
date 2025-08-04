@@ -9,12 +9,12 @@ class Mitra extends Model
 {
     /** @use HasFactory<\Database\Factories\MitraFactory> */
     use HasFactory;
+    protected $table = 'mitras';
 
      protected $fillable = [
-        'kode_mitra',
         'nama',
         'nomor_telepon',
-        'tipe',
+        'role',
         'saldo_piutang',
     ];
 
