@@ -10,10 +10,10 @@
     <p>Welcome, to this beautiful admin panel.</p>
     <x-adminlte-card title="Product Management" icon="fas fa-lg fa-boxes" collapsible>
         <p>Manage All Product Here !</p>
-        <button class="btn btn-primary" onclick="window.location.href='{{ route('product') }}'">
+        <button class="btn btn-primary" onclick="window.location.href='{{ route('product.index') }}'">
             <i class="fas fa-box-open"></i> Manage Product
         </button>
-        <button class="btn btn-success" onclick="window.location.href='{{ route('category') }}'">
+        <button class="btn btn-success" onclick="window.location.href='{{ route('category.index') }}'">
             <i class="fas fa-boxes"></i> Manage Product Category
         </button>
     </x-adminlte-card>
