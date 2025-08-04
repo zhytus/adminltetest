@@ -20,7 +20,9 @@
 
     <x-adminlte-card title="Partner Management" icon="fas fa-lg fa-users" collapsible>
         <p>Manage All Partner Here !</p>
-        <x-adminlte-button theme="primary" label="Manage Customer" icon="fas fa-user"/>
+        <button class="btn btn-primary" onclick="window.location.href='{{ route('customer.index') }}'">
+            <i class="fas fa-user"></i> Manage Customer
+        </button>
         <x-adminlte-button theme="success" label="Manage Supplier" icon="fas fa-user-tag"/>
     </x-adminlte-card>
 
