@@ -38,7 +38,7 @@
             </div>
         
             <div class="table-responsive">
-                <table class="table table-bordered table-striped" id="kategoriTable">
+                <table class="table table-bordered table-striped" id="customerTable">
                     <thead class="table-dark">
                         <tr>
                             <th width="10%">ID</th>
@@ -56,6 +56,9 @@
                                 <tr id="customer-row-{{ $customer->id }}">
                                     <td>{{ $customer->id }}</td>
                                     <td class="customer-nama">{{ $customer->nama }}</td>
+                                    <td class="customer-nomor">{{ $customer->nomor_telepon }}</td>
+                                    <td class="customer-role">{{ $customer->role }}</td>
+                                    <td class="customer-saldo">{{ $customer->saldo_piutang }}</td>
                                     <td>{{ $customer->created_at->format('d/m/Y H:i') }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -172,8 +175,8 @@
                             <label for="nomor_telepon_edit" class="form-label">Nomor Telepon Customer <span class="text-danger">*</span></label>
                             <input type="text" name="nomor_telepon" id="nomor_telepon_edit" class="form-control" required placeholder="Masukkan nomor telepon customer">
                             <label for="role_customer_edit" class="form-label">Role <span class="text-danger">*</span></label>
-                            <select name="role" id="role_customer_edit" class="form-select form-control" required>
-                                <option value="pelanggan">Customer</option>
+                            <select name="role" id="role_customer_edit" class="form-select form-control" required readonly>
+                                <option value="pelanggan" selected>Customer</option>
                                 <option value="pemasok">Supplier</option>
                             </select>
                             <label for="saldo_piutang_edit" class="form-label">Saldo Piutang <span class="text-danger">*</span></label>
@@ -191,6 +194,35 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalHapusCustomer" tabindex="-1" aria-labelledby="modalHapusCustomerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalHapusCustomerLabel">
+                        <i class="fas fa-exclamation-triangle"></i> Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-exclamation-triangle fa-4x text-danger mb-3"></i>
+                    <h5>Apakah Anda yakin?</h5>
+                    <p>Yakin ingin menghapus customer <strong id="customer-nama-hapus"></strong>?</p>
+                    <p class="text-muted small">Data yang sudah dihapus tidak dapat dikembalikan!</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-danger" id="btnHapus">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                        <i class="fas fa-trash"></i> Ya, Hapus
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -296,29 +328,41 @@
                 const newRow = `
                     <tr id="customer-row-${customer.id}">
                         <td>${customer.id}</td>
-                        <td class="customer-nama">${customer.nama_}</td>
+                        <td class="customer-nama">${customer.nama}</td>
+                        <td class="customer-nomor">${ customer.nomor_telepon }</td>
+                        <td class="customer-role">${ customer.role }</td>
+                        <td class="customer-saldo">${ customer.saldo_piutang }</td>
                         <td>${formatDate(customer.created_at)}</td>
                         <td>
                             <div class="btn-group" role="group">
                                 <button class="btn btn-info btn-sm btn-view" 
                                         data-id="${customer.id}" 
                                         data-nama="${customer.nama}"
+                                        data-nomor="${customer.nomor_telepon }"
+                                                    data-role="${customer.role }"
+                                                    data-saldo="${customer.saldo_piutang }"
                                         data-toggle="modal" 
                                         data-target="#modalViewCustomer"
                                         title="View">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button class="btn btn-warning btn-sm btn-edit" 
-                                        data-id="${customer.id}" 
-                                        data-nama="${customer.nama}"
-                                        data-toggle="modal" 
-                                        data-target="#modalEditCustomer"
-                                        title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                                 <button class="btn btn-warning btn-sm btn-edit" 
+                                                data-id="${customer.id }" 
+                                                data-nama="${customer.nama }"
+                                                data-nomor="${customer.nomor_telepon }"
+                                                data-role="${customer.role }"
+                                                data-saldo="${customer.saldo_piutang }"
+                                                data-toggle="modal" 
+                                                data-target="#modalEditCustomer"
+                                                title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
                                 <button class="btn btn-danger btn-sm btn-delete" 
                                         data-id="${customer.id}" 
                                         data-nama="${customer.nama}"
+                                        data-nomor="${customer.nomor_telepon }"
+                                        data-role="${customer.role }"
+                                        data-saldo="${customer.saldo_piutang }"
                                         data-toggle="modal" 
                                         data-target="#modalHapusCustomer"
                                         title="Delete">
@@ -328,25 +372,37 @@
                         </td>
                     </tr>
                 `;
-                $('#kategoriTable tbody').append(newRow);
+                $('#customerTable tbody').append(newRow);
             }
 
             // Update row in table
-            function updateRowInTable(customer) {
+            function updateRowInTable(mitra) {
                 const row = $(`#customer-row-${customer.id}`);
                 row.find('.customer-nama').text(customer.nama);
-                row.find('.btn-edit').attr('data-nama', customer.nama_customer);
-                row.find('.btn-view').attr('data-nama', customer.nama_customer);
-                row.find('.btn-delete').attr('data-nama', customer.nama_customer);
+                row.find('.customer-nomor').text(customer.nomor_telepon);
+                row.find('.customer-role').text(customer.role);
+                row.find('.customer-saldo').text(customer.saldo_piutang);
+                row.find('.btn-edit').attr('data-nama', customer.nama, 
+                                            'data-nomor', customer.nomor_telepon,
+                                            'data-role', customer.role,
+                                            'data-saldo', customer.saldo_piutang);
+                row.find('.btn-view').attr('data-nama', customer.nama, 
+                                            'data-nomor', customer.nomor_telepon,
+                                            'data-role', customer.role,
+                                            'data-saldo', customer.saldo_piutang);
+                row.find('.btn-delete').attr('data-nama', customer.nama, 
+                                            'data-nomor', customer.nomor_telepon,
+                                            'data-role', customer.role,
+                                            'data-saldo', customer.saldo_piutang);
             }
 
             // Remove row from table
             function removeRowFromTable(id) {
-                $(`#kategori-row-${id}`).fadeOut(300, function() {
+                $(`#customer-row-${id}`).fadeOut(300, function() {
                     $(this).remove();
                     
                     // Show "no data" message if table is empty
-                    if ($('#kategoriTable tbody tr').length === 0) {
+                    if ($('#customerTable tbody tr').length === 0) {
                         const noDataRow = `
                             <tr id="no-data-row">
                                 <td colspan="4" class="text-center text-muted">
@@ -355,7 +411,7 @@
                                 </td>
                             </tr>
                         `;
-                        $('#kategoriTable tbody').append(noDataRow);
+                        $('#customerTable tbody').append(noDataRow);
                     }
                 });
             }
@@ -429,7 +485,7 @@
                 $('#nomor_telepon_edit').val(nomorTelepon);
                 $('#role_kategori_edit').val(role);
                 $('#saldo_piutang_edit').val(saldoPiutang);
-                clearValidation($('#formEditKategori'));
+                clearValidation($('#formEditCustomer'));
              });
 
         // UPDATE - Update kategori
@@ -457,6 +513,8 @@
                             setLoadingState(submitBtn, false);
                             showAlert(response.message, 'success');
                             updateRowInTable(response.data);
+                            console.log('Update response:', response.data);
+                            
                             
                             // Close modal
                             const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditCustomer'));
@@ -480,6 +538,47 @@
                 });
             });
 
+
+            // DELETE - Delete button click
+            $(document).on('click', '.btn-delete', function() {
+                const id = $(this).data('id');
+                const nama = $(this).data('nama');
+                
+                currentCustomerId = id;
+                $('#customer-nama-hapus').text(nama);
+            });
+
+            // DELETE - Delete kategori
+            $('#btnHapus').on('click', function() {
+                const submitBtn = $(this);
+                
+                setLoadingState(submitBtn, true);
+                
+                $.ajax({
+                    url: `{{ url('customer') }}/${currentCustomerId}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        if (response.success) {
+                            setLoadingState(submitBtn, false);
+                            showAlert(response.message, 'success');
+                            removeRowFromTable(currentCustomerId);
+                            
+                            // Close modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('modalHapusCustomer'));
+                            if (modal) {
+                                modal.hide();
+                            }
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'Terjadi kesalahan!';
+                        showAlert(message, 'error');
+                    },
+                    complete: function() {
+                        setLoadingState(submitBtn, false);
+                    }
+                });
+            });
         });            
     </script>
 @stop

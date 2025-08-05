@@ -169,12 +169,12 @@ class MitraController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mitra $mitra)
+    public function destroy(Mitra $customer)
     {
         try {
-            $id = $mitra->id;
-            $mitra->delete();
-            Log::info("Customer with id = '{$id}' deleted successfully");
+            $id = $customer->id;
+            $customer->delete();
+            Log::info("Customer '{$id}' deleted successfully");
 
             if (request()->ajax()) {
                 return response()->json([
@@ -192,6 +192,146 @@ class MitraController extends Controller
                 ], 500);
             }
             return redirect()->back()->with('error', 'Error deleting customer: ' . $e->getMessage());
+        }
+    }
+
+
+    public function supplier ()
+    {
+        try {
+            $suppliers = Mitra::where('role', 'pemasok')->orderBy('nama', 'asc')->get();
+            return view('partners.supplier', compact('suppliers'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching suppliers: ' . $e->getMessage());
+            return view('partners.supplier')->with('error', 'Error loading suppliers');
+        }
+    }
+
+    public function storeSupplier(Request $request)
+    {
+        try {
+            // Validate input
+            $validated = $request->validate([
+                'nama' => 'required|string|max:255|unique:mitras,nama',
+                'nomor_telepon' => 'required|string|max:20',
+                'role' => 'required|string|max:50',
+                'saldo_piutang' => 'required|numeric|min:0',
+            ], [
+                'nama.required' => 'Nama Supplier wajib diisi',
+                'nama.unique' => 'Nama supplier sudah ada',
+                'nomor_telepon.required' => 'Nomor telepon wajib diisi',
+                'role.required' => 'Role wajib diisi',
+                'saldo_piutang.required' => 'Saldo piutang wajib diisi',
+            ]);
+
+            $mitra = Mitra::create($validated);
+            log::info('supplier created successfully: ' . $validated['nama']);
+
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'supplier created successfully',
+                    'data' => $mitra
+                ]);
+            }
+            return redirect()->route('supplier.index')->with('success', 'Supplier created successfully');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Validation failes for category creation: ', $e->errors());
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error creating supplier: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error creating supplier: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Error creating supplier: ' . $e->getMessage());
+        }
+    }
+
+
+    public function destroySupplier(Mitra $supplier)
+    {
+        try {
+            $id = $supplier->id;
+            $supplier->delete();
+            Log::info("Supplier '{$id}' deleted successfully");
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Supplier with id =  '{$id}' deleted successfully"
+                ]);
+            }
+            return redirect()->route('supplier.index')->with('success', "Supplier with id = '{$id}' deleted successfully");
+        } catch (\Exception $e) {
+            Log::error('Error deleting Supplier: ' . $e->getMessage());
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error deleting supplier: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Error deleting supplier: ' . $e->getMessage());
+        }
+    }
+
+    public function updateSupplier(Request $request, Mitra $supplier)
+    {
+        try {   
+            $validated=$request->validate([
+                'nama' => 'required|string|max:255' . $supplier->id,
+                'nomor_telepon' => 'required|string|max:20',
+                'role' => 'required|string|max:50',
+                'saldo_piutang' => 'required|numeric|min:0',
+            ], [
+                'nama.required' => 'Nama supplier wajib diisi',
+                'nomor_telepon.required' => 'Nomor telepon wajib diisi',
+                'role.required' => 'Role wajib diisi',
+                'saldo_piutang.required' => 'Saldo piutang wajib diisi',
+            ]);
+
+            $supplier->update($validated);
+            Log::info('supplier updated successfully: ' . $supplier->nama);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Customer updated successfully',
+                    'data' => $supplier
+                ]);
+            }
+
+            return redirect()->route('supplier.index')->with('success', 'supplier updated successfully');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Validation failed for customer update: ', $e->errors());
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            return redirect()->back()->withErrors($e->errors())->withInput();
+    }   catch (\Exception $e) {
+            Log::error('Error updating supplier: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error updating supplier: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Error updating supplier: ' . $e->getMessage());
         }
     }
 }
