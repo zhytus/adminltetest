@@ -21,7 +21,7 @@ class MitraController extends Controller
     public function index()
     {
         try {
-            $customers = Mitra::orderBy('nama', 'asc')->get();
+            $customers = Mitra::where('role','pelanggan')->orderBy('nama', 'asc')->get();
             return view('partners.customer', compact('customers'));
         } catch (\Exception $e) {
             Log::error('Error fetching customers: ' . $e->getMessage());
