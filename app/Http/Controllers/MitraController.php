@@ -169,20 +169,20 @@ class MitraController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mitra $mitra)
+    public function destroy(Mitra $customer)
     {
         try {
-            $id = $mitra->id;
-            $mitra->delete();
-            Log::info("Customer '{$id->nama}' deleted successfully");
+            $id = $customer->id;
+            $customer->delete();
+            Log::info("Customer '{$id}' deleted successfully");
 
             if (request()->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => "Customer '{$id->nama}' deleted successfully"
+                    'message' => "Customer '{$id}' deleted successfully"
                 ]);
             }
-            return redirect()->route('customer.index')->with('success', "Customer '{$id->nama}' deleted successfully");
+            return redirect()->route('customer.index')->with('success', "Customer '{$id}' deleted successfully");
         } catch (\Exception $e) {
             Log::error('Error deleting customer: ' . $e->getMessage());
             if (request()->ajax()) {
