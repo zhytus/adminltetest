@@ -226,7 +226,6 @@
                 });
             }
 
-
             function updateRowInTable(responseData) {
                 const produk = responseData.produk;
                 const row = $(`#produk-row-${produk.id}`);
