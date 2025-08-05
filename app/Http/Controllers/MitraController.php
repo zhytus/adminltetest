@@ -176,15 +176,15 @@ class MitraController extends Controller
         try {
             $id = $mitra->id;
             $mitra->delete();
-            Log::info("Customer '{$id->nama}' deleted successfully");
+            Log::info("Customer with id = '{$id}' deleted successfully");
 
             if (request()->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => "Customer '{$id->nama}' deleted successfully"
+                    'message' => "Customer with id =  '{$id}' deleted successfully"
                 ]);
             }
-            return redirect()->route('customer.index')->with('success', "Customer '{$id->nama}' deleted successfully");
+            return redirect()->route('customer.index')->with('success', "Customer with id = '{$id}' deleted successfully");
         } catch (\Exception $e) {
             Log::error('Error deleting customer: ' . $e->getMessage());
             if (request()->ajax()) {
