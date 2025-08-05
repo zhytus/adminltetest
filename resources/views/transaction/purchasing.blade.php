@@ -226,11 +226,10 @@
                 });
             }
 
-
-            function updateRowInTable(transaction) {
+            function updateRowInTable(responseData) {
+                const produk = responseData.produk;
                 const row = $(`#produk-row-${produk.id}`);
                 row.find('.produk-stok').text(produk.stok);
-
             }
 
             // Refresh button functionality
