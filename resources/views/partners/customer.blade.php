@@ -175,8 +175,8 @@
                             <label for="nomor_telepon_edit" class="form-label">Nomor Telepon Customer <span class="text-danger">*</span></label>
                             <input type="text" name="nomor_telepon" id="nomor_telepon_edit" class="form-control" required placeholder="Masukkan nomor telepon customer">
                             <label for="role_customer_edit" class="form-label">Role <span class="text-danger">*</span></label>
-                            <select name="role" id="role_customer_edit" class="form-select form-control" required>
-                                <option value="pelanggan">Customer</option>
+                            <select name="role" id="role_customer_edit" class="form-select form-control" required readonly>
+                                <option value="pelanggan" selected>Customer</option>
                                 <option value="pemasok">Supplier</option>
                             </select>
                             <label for="saldo_piutang_edit" class="form-label">Saldo Piutang <span class="text-danger">*</span></label>
@@ -329,9 +329,9 @@
                     <tr id="customer-row-${customer.id}">
                         <td>${customer.id}</td>
                         <td class="customer-nama">${customer.nama}</td>
-                        <td class="customer-nomor">${ customer.nomor_telepon }}</td>
-                        <td class="customer-role">${ customer.role }}</td>
-                        <td class="customer-saldo">${ customer.saldo_piutang }}</td>
+                        <td class="customer-nomor">${ customer.nomor_telepon }</td>
+                        <td class="customer-role">${ customer.role }</td>
+                        <td class="customer-saldo">${ customer.saldo_piutang }</td>
                         <td>${formatDate(customer.created_at)}</td>
                         <td>
                             <div class="btn-group" role="group">

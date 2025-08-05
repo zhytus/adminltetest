@@ -16,6 +16,9 @@
         <button class="btn btn-success" onclick="window.location.href='{{ route('category.index') }}'">
             <i class="fas fa-boxes"></i> Manage Product Category
         </button>
+        <button class="btn btn-info" onclick="window.location.href='{{ route('transaction.index') }}'">
+            <i class="fas fa-cart-plus"></i> Manage Purchasing
+        </button>
     </x-adminlte-card>
 
     <x-adminlte-card title="Partner Management" icon="fas fa-lg fa-users" collapsible>
@@ -23,7 +26,9 @@
         <button class="btn btn-primary" onclick="window.location.href='{{ route('customer.index') }}'">
             <i class="fas fa-user"></i> Manage Customer
         </button>
-        <x-adminlte-button theme="success" label="Manage Supplier" icon="fas fa-user-tag"/>
+        <button class="btn btn-success" onclick="window.location.href='{{ route('supplier.index') }}'">
+            <i class="fas fa-user-tag"></i> Manage Supplier
+        </button>
     </x-adminlte-card>
 
     <x-adminlte-card title="Finance Management" icon="fas fa-lg fa-money-bill" collapsible>

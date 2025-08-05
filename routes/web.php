@@ -48,5 +48,20 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{customer}', [App\Http\Controllers\MitraController::class, 'destroy'])->name('destroy');
     });
 
-    Route::get('/supplier', [App\Http\Controllers\PartnerController::class, 'show'])->name('supplier');
+    Route::prefix('supplier')->name('supplier.')->group(function () {
+        Route::get('/', [App\Http\Controllers\MitraController::class, 'supplier'])->name('index');
+        Route::get('/data', [App\Http\Controllers\MitraController::class, 'getData'])->name('data');
+        Route::post('/', [App\Http\Controllers\MitraController::class, 'storeSupplier'])->name('store');
+        Route::get('/{supplier}', [App\Http\Controllers\MitraController::class, 'show'])->name('show');
+        Route::put('/{supplier}', [App\Http\Controllers\MitraController::class, 'updateSupplier'])->name('update');
+        Route::delete('/{supplier}', [App\Http\Controllers\MitraController::class, 'destroySupplier'])->name('destroy');
+    });
+    
+    Route::prefix('transaction')->name('transaction.')->group(function () {
+        Route::get('/', [App\Http\Controllers\TransactionController::class, 'getData'])->name('index');
+        Route::post('/', [App\Http\Controllers\TransactionController::class, 'store'])->name('store');
+        Route::get('/{supplier}', [App\Http\Controllers\TransactionController::class, 'show'])->name('show');
+        Route::put('/{productid}', [App\Http\Controllers\TransactionController::class, 'update'])->name('update');
+        Route::delete('/{supplier}', [App\Http\Controllers\TransactionController::class, 'destroy'])->name('destroy');
+    });
 });

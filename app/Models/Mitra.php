@@ -18,4 +18,9 @@ class Mitra extends Model
         'saldo_piutang',
     ];
 
+    public function produks()
+    {
+        return $this->hasMany(Produk::class, 'mitra_id');
+    }
+
 }
