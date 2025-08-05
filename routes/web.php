@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [App\Http\Controllers\MitraController::class, 'index'])->name('index');
         Route::get('/data', [App\Http\Controllers\MitraController::class, 'getData'])->name('data');
         Route::post('/', [App\Http\Controllers\MitraController::class, 'store'])->name('store');
-        Route::get('/{customer                                  }', [App\Http\Controllers\MitraController::class, 'show'])->name('show');
+        Route::get('/{customer}', [App\Http\Controllers\MitraController::class, 'show'])->name('show');
         Route::put('/{customer}', [App\Http\Controllers\MitraController::class, 'update'])->name('update');
         Route::delete('/{customer}', [App\Http\Controllers\MitraController::class, 'destroy'])->name('destroy');
     });

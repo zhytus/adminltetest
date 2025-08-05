@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Mitra;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreMitraRequest;
+use Illuminate\Http\Request;
 use App\Http\Requests\UpdateMitraRequest;
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Log;
 
 class MitraController extends Controller
@@ -33,7 +32,7 @@ class MitraController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMitraRequest $request)
+    public function store(Request $request)
     {
         try {
             // Validate input
@@ -117,30 +116,29 @@ class MitraController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMitraRequest $request, Mitra $mitra)
+    public function update(Request $request, Mitra $customer)
     {
-        try {
+        try {   
             $validated=$request->validate([
-                'nama' => 'required|string|max:255|unique:mitras,nama,' . $mitra->id,
+                'nama' => 'required|string|max:255' . $customer->id,
                 'nomor_telepon' => 'required|string|max:20',
                 'role' => 'required|string|max:50',
                 'saldo_piutang' => 'required|numeric|min:0',
             ], [
                 'nama.required' => 'Nama customer wajib diisi',
-                'nama.unique' => 'Nama customer sudah ada',
                 'nomor_telepon.required' => 'Nomor telepon wajib diisi',
                 'role.required' => 'Role wajib diisi',
                 'saldo_piutang.required' => 'Saldo piutang wajib diisi',
             ]);
 
-            $mitra->update($validated);
-            Log::info('Customer updated successfully: ' . $mitra->nama);
+            $customer->update($validated);
+            Log::info('Customer updated successfully: ' . $customer->nama);
 
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Customer updated successfully',
-                    'data' => $mitra
+                    'data' => $customer
                 ]);
             }
 
