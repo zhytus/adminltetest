@@ -29,6 +29,12 @@ class TransactionController extends Controller
         return view('transactions.index', compact('transactions'));
     }
 
+    public function sellData() {
+        $kategoris = \App\Models\Kategori::all();
+        $produks = Produk::all();
+        $mitras = \App\Models\Mitra::where('role', 'pelanggan')->get();
+        return view('transaction.sell', compact('produks', 'kategoris', 'mitras'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -40,10 +46,85 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTransactionRequest $request)
-    {
-        //
+
+public function store(Request $request)
+{
+    Log::info('Storing new transaction with data: ', $request->all());
+
+    try {
+        $validated = $request->validate([
+            'items' => 'required|array',
+            'items.*.produk_id' => 'required|integer|exists:produks,id',
+            'items.*.jumlah_produk' => 'required|integer|min:1',
+            'items.*.harga_jual_produk' => 'required|numeric|min:0',
+            'total_amount' => 'required|numeric|min:0',
+            'tipe_pembayaran' => 'nullable|string',
+            'supplier_id' => 'required|exists:mitras,id'
+            
+        ]);
+
+        DB::beginTransaction();
+
+        $supplier = \App\Models\Mitra::findOrFail($validated['supplier_id']);
+
+        // Simpan transaksi utama
+        $transaction = \App\Models\Transaction::create([
+            'total' => $validated['total_amount'],
+            'tipe_transaksi' => 'penjualan',
+            'tipe_pembayaran' => $validated['tipe_pembayaran'] ?? 'tunai',
+        ]);
+
+        
+        foreach ($validated['items'] as $item) {
+            $produk = \App\Models\Produk::findOrFail($item['produk_id']);
+
+            \App\Models\DetailTransaksi::create([
+                'transaction_id' => $transaction->id,
+                'produk_id' => $produk->id,
+                'produk_nama' => $produk->nama_produk,
+                'jumlah_barang' => $item['jumlah_produk'],
+                'harga_beli' => $item['harga_jual_produk'],
+                'total' => $item['harga_jual_produk'] * $item['jumlah_produk'],
+                'tipe' => 'penjualan',
+                'mitra_id' => $supplier->id,
+                'mitra_nama' => $supplier->nama
+            ]);
+
+            // Update stok produk
+            $produk->decrement('stok', $item['jumlah_produk']);
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaksi berhasil dicatat!',
+            'data' => [
+                'transaction' => $transaction,
+                'transaction_code' => 'TXN-' . time()
+            ]
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        DB::rollBack();
+        Log::warning('Validation failed for transaction store: ', ['errors' => $e->errors()]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation failed',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error storing transaction: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan server.',
+            'errors' => $e->getMessage()
+        ], 500);
     }
+}
+
 
     /**
      * Display the specified resource.

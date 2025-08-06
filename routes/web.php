@@ -59,7 +59,8 @@ Route::middleware(['auth'])->group(function () {
     
     Route::prefix('transaction')->name('transaction.')->group(function () {
         Route::get('/', [App\Http\Controllers\TransactionController::class, 'getData'])->name('index');
-        Route::post('/', [App\Http\Controllers\TransactionController::class, 'store'])->name('store');
+        Route::get('/sell', [App\Http\Controllers\TransactionController::class, 'sellData'])->name('sell');
+        Route::post('/store', [App\Http\Controllers\TransactionController::class, 'store'])->name('store');
         Route::get('/{supplier}', [App\Http\Controllers\TransactionController::class, 'show'])->name('show');
         Route::put('/{productid}', [App\Http\Controllers\TransactionController::class, 'update'])->name('update');
         Route::delete('/{supplier}', [App\Http\Controllers\TransactionController::class, 'destroy'])->name('destroy');

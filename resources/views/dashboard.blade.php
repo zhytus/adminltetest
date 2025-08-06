@@ -8,6 +8,9 @@
 
 @section('content')
     <p>Welcome, to this beautiful admin panel.</p>
+    <button class="btn btn-primary mb-3" onclick="window.location.href='{{ route('transaction.sell') }}'">
+        <i class="fas fa-dolly-flatbed"></i> Sell Product
+    </button>
     <x-adminlte-card title="Product Management" icon="fas fa-lg fa-boxes" collapsible>
         <p>Manage All Product Here !</p>
         <button class="btn btn-primary" onclick="window.location.href='{{ route('product.index') }}'">
